@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADSPUSH CALL V2 PERFECT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:Arial;text-align:center}
+header{background:#00a884;padding:14px;font-size:18px;font-weight:bold}
+.box{background:#111b21;margin:12px;padding:15px;border-radius:15px}
+button{background:#00a884;border:none;color:#fff;padding:14px 20px;border-radius:25px;margin:6px;font-size:16px;font-weight:bold}
+button.big{background:#25D366;padding:16px 30px;font-size:18px}
+input,select{width:95%;padding:12px;margin:8px;border-radius:10px;border:none;font-size:16px;text-align:center}
+video{width:100%;background:#000;border-radius:12px}
+#customerFull{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#111;z-index:999}
+#customerFull.show{display:block}
+#customerMainVideo{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;background:#000}
+#callerBar{position:absolute;top:0;left:0;right:0;padding:22px;background:#000;z-index:10;border-bottom:2px solid #00a884}
+#callerBar h2{font-size:32px;color:#ffeb3b}
+#tapArea{position:absolute;bottom:15px;left:0;right:0;z-index:10;padding:10px}
+#tapBtn{background:#25D366;font-size:20px;padding:18px 20px;border-radius:30px;border:3px solid #fff;width:92%}
+#debug{margin-top:10px;font-size:15px;color:#fff;background:#000;padding:10px;border-radius:10px;border:1px solid #fff}
+#mySmall{position:absolute;bottom:110px;right:15px;width:100px;height:140px;object-fit:cover;border:2px solid #fff;border-radius:10px;z-index:10;display:none}
+</style>
+</head>
+<body>
+<header>🚀 ADSPUSH CALL V2 ✅</header>
+
+<div id="customerFull">
+  <div id="callerBar"><h2 id="callerNameDisplay">MUSA is calling you!</h2><p style="color:#25D366">Tap button below - No camera needed to watch!</p></div>
+  <video id="customerMainVideo" autoplay playsinline></video>
+  <video id="mySmall" autoplay muted playsinline></video>
+  <div id="tapArea">
+    <button id="tapBtn" onclick="customerJoin()">🔊 TAP TO WATCH VIDEO + HEAR VOICE</button>
+    <div id="debug">Ready - Tap button</div>
+  </div>
+</div>
+
+<div id="sellerSection">
+<div class="box" style="border:2px solid #00a884">
+<h3>👤 YOUR NAME</h3>
+<input id="myNameInput" value="MUSA">
+<p id="myIdText">Loading... Wait 5 sec</p>
+<p style="color:#25D366">✅ If you see ID = Peer is working!</p>
+<p style="color:#ff3b30">❌ If you see Loading forever = Internet / GitHub not updated - Wait 1 min & Refresh!</p>
+</div>
+<div class="box">
+<h3>1. UPLOAD AD - TEST IT HERE FIRST</h3>
+<input type="file" id="adUpload" accept="image/*,video/*">
+<img id="myAdPhoto" style="width:100%;display:none">
+<video id="myAdVideo" loop muted playsinline style="width:100%;display:none"></video>
+<p id="adStatus" style="color:#ffeb3b">No AD yet - Upload video first!</p>
+<button onclick="testAd()">▶️ TEST MY AD HERE - Click to see if AD plays</button>
+<p id="testResult"></p>
+<button onclick="setMode('ad')">🎬 AD AS FACE ✅</button>
+<button onclick="setMode('face')">📷 REAL FACE</button>
+<p id="modeText">Mode: AD AS FACE</p>
+</div>
+<div class="box">
+<h3>2. COUNTRY + TRANSLATION - YOUR END ONLY</h3>
+<select id="langSelect">
+<option value="en-US">🇺🇸 English</option>
+<option value="fr-FR">🇫🇷 French</option>
+<option value="es-ES">🇪🇸 Spanish</option>
+<option value="ar-EG">🇪🇬 Egypt</option>
+<option value="ar-SA">🇸🇦 Saudi</option>
+<option value="ar-KW">🇰🇼 Kuwait</option>
+<option value="ar-AE">🇦🇪 UAE</option>
+<option value="it-IT">🇮🇹 Italian</option>
+<option value="ja-JP">🇯🇵 Japan</option>
+<option value="ko-KR">🇰🇷 Korea</option>
+<option value="zh-CN">🇨🇳 Chinese</option>
+<option value="hi-IN">🇮🇳 Hindi</option>
+<option value="pt-BR">🇧🇷 Brazil</option>
+</select><br>
+<button onclick="startTrans()">🎤 START TRANSLATION</button>
+<button onclick="stopTrans()" style="background:#ff3b30">⏹ STOP</button>
+<p id="heard">Heard: ---</p><p id="translated">Translated: ---</p>
+</div>
+<div class="box">
+<h3>3. CREATE LINK - DO THIS AFTER AD UPLOAD</h3>
+<button class="big" onclick="createLink()">🔗 CREATE LINK</button>
+<button onclick="copyLink()">📋 COPY & SHARE</button>
+<p id="linkShow" style="word-break:break-all;font-size:13px;color:#ffeb3b;background:#000;padding:8px"></p>
+</div>
+</div>
+<div class="box" id="videoBox"><p>Your preview:</p><video id="myVideo" autoplay muted playsinline style="max-height:240px"></video><video id="remoteVideo" autoplay playsinline style="max-height:240px"></video></div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer, myId, callerId=null, currentMode='ad', myLink='';
+let params=new URLSearchParams(location.search);
+let isCustomer=params.has('call');
+if(isCustomer){
+ document.getElementById('customerFull').classList.add('show');
+ let n=params.get('name')?decodeURIComponent(params.get('name')):'MUSA';
+ document.getElementById('callerNameDisplay').innerText=n+' is calling you!';
+ document.getElementById('debug').innerText='Link OK - Caller: '+n+' - Tap to watch (no camera needed)';
+ callerId=params.get('call');
+}
+peer=new Peer();
+peer.on('open',id=>{myId=id; document.getElementById('myIdText').innerText='✅ READY! Your ID: '+id.slice(0,10)+' - Now CREATE LINK'; if(isCustomer) document.getElementById('debug').innerText='✅ Ready to connect - Tap button';});
+peer.on('error',e=>{document.getElementById('myIdText').innerText='❌ Peer Error: '+e.type; if(isCustomer) document.getElementById('debug').innerText='❌ Peer Error: '+e.type+' - Refresh page';});
+peer.on('call',call=>{
+ getSellerStream().then(s=>{document.getElementById('myVideo').srcObject=s; call.answer(s); call.on('stream',rs=>{document.getElementById('remoteVideo').srcObject=rs;});}).catch(e=>{alert('Seller error: '+e.message+' - Allow mic!')});
+});
+function testAd(){ let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto'); if(v.style.display!=='none'){v.muted=false;v.play();document.getElementById('testResult').innerText='✅ AD Video playing! Sound? If you hear sound, AD is good!';} else if(p.style.display!=='none'){document.getElementById('testResult').innerText='✅ AD Photo showing!';} else document.getElementById('testResult').innerText='❌ No AD uploaded! Upload first!';}
+async function getSellerStream(){
+ let mic=null; try{mic=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}catch(e){alert('Allow MIC! Voice will not work without mic!');}
+ if(currentMode==='ad'){
+  let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto');
+  if(v.src && v.style.display!=='none'){ v.muted=true; await v.play().catch(()=>{}); let vs=v.captureStream?v.captureStream():v.mozCaptureStream(); let t=[...vs.getVideoTracks()]; if(mic) t.push(...mic.getAudioTracks()); return new MediaStream(t); }
+  if(p.src && p.style.display!=='none'){ let c=document.createElement('canvas'); c.width=640; c.height=360; let ctx=c.getContext('2d'); setInterval(()=>ctx.drawImage(p,0,0,640,360),100); let vs=c.captureStream(30); let t=[...vs.getVideoTracks()]; if(mic) t.push(...mic.getAudioTracks()); return new MediaStream(t); }
+ }
+ return await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+}
+function setMode(m){currentMode=m;document.getElementById('modeText').innerText=m==='ad'?'Mode: AD AS FACE ✅':'Mode: Real Face';}
+async function customerJoin(){
+ // NEW - NO CAMERA NEEDED TO WATCH!
+ document.getElementById('debug').innerText='Joining... Please wait 5 sec...';
+ try{
+   // Try to get camera for small view, but if fails, still join without it
+   let s=null;
+   try{ s=await navigator.mediaDevices.getUserMedia({video:true,audio:true}); document.getElementById('mySmall').style.display='block'; document.getElementById('mySmall').srcObject=s; }catch(e){ s=new MediaStream(); document.getElementById('debug').innerText='No camera - Still joining to watch video...'; }
+   let c=peer.call(callerId, s || new MediaStream());
+   c.on('stream', rs=>{ let mv=document.getElementById('customerMainVideo'); mv.srcObject=rs; mv.play().then(()=>{document.getElementById('debug').innerText='✅ CONNECTED! You see AD + Hear voice!'; document.getElementById('tapBtn').innerText='✅ CONNECTED - VIDEO PLAYING';}); });
+   setTimeout(()=>{ if(!document.getElementById('customerMainVideo').srcObject) document.getElementById('debug').innerText='⚠️ No video from seller! Seller must: 1) Keep page open 2) Upload AD 3) Not close tab'; },6000);
+ }catch(e){ document.getElementById('debug').innerText='❌ Error: '+e.message; }
+}
+function createLink(){ if(!myId){alert('Wait! Peer not ready - Refresh!'); return;} let n=document.getElementById('myNameInput').value||'MUSA'; myLink=location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n); document.getElementById('linkShow').innerText=myLink; alert('Link created!'); }
+function copyLink(){ if(!myLink) createLink(); navigator.clipboard.writeText('Hi! This is '+document.getElementById('myNameInput').value+' 👋 Click to see live 👇\n'+myLink); alert('Copied!'); }
+document.getElementById('adUpload').addEventListener('change',e=>{let f=e.target.files[0];let u=URL.createObjectURL(f);if(f.type.startsWith('image')){let i=document.getElementById('myAdPhoto');i.src=u;i.style.display='block';document.getElementById('myAdVideo').style.display='none';document.getElementById('adStatus').innerText='Photo AD ready ✅';}else{let v=document.getElementById('myAdVideo');v.src=u;v.style.display='block';v.play();document.getElementById('myAdPhoto').style.display='none';document.getElementById('adStatus').innerText='Video AD ready ✅ - Click TEST MY AD';}});
+let rec;function startTrans(){ let lang=document.getElementById('langSelect').value; let S=window.SpeechRecognition||window.webkitSpeechRecognition; rec=new S(); rec.lang='en-US'; rec.continuous=true; rec.interimResults=true; rec.onresult=async e=>{let t=e.results[e.results.length-1][0].transcript; if(!e.results[e.results.length-1].isFinal) return; document.getElementById('heard').innerText='Heard: '+t; let tg=lang.split('-')[0]; let r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(t)}&langpair=en|${tg}`); let d=await r.json(); let tr=d.responseData.translatedText; document.getElementById('translated').innerText='Translated: '+tr; let u=new SpeechSynthesisUtterance(tr); u.lang=lang; u.rate=1.1; speechSynthesis.speak(u);}; rec.start();}
+function stopTrans(){ if(rec) rec.stop(); }
+</script>
+</body>
+  </html>
