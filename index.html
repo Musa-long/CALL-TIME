@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ADSPUSH CALL</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;margin:0;padding:0}
+header{background:#00a884;padding:12px;font-size:18px;font-weight:bold;text-align:center}
+.box{background:#111b21;margin:12px;padding:15px;border-radius:15px;text-align:center}
+button{background:#00a884;border:none;color:#fff;padding:13px 20px;border-radius:25px;margin:6px;font-size:16px;font-weight:bold}
+button.big{background:#25D366;padding:16px 30px;font-size:18px}
+button.active{background:#ff9800;color:#000}
+input,select{width:95%;padding:12px;margin:8px;border-radius:10px;border:none;font-size:16px;text-align:center}
+video{width:100%;background:#000;border-radius:15px}
+
+/* CUSTOMER - ONLY NAME + FULL VIDEO */
+body.customer{overflow:hidden}
+body.customer header, body.customer #sellerSection, body.customer #videoBox{display:none!important}
+#customerFull{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;display:none;z-index:9999}
+body.customer #customerFull{display:block}
+#customerFull video{width:100vw;height:100vh;object-fit:cover}
+#callerBar{position:absolute;top:0;left:0;right:0;padding:20px;background:linear-gradient(rgba(0,0,0,0.9),transparent);text-align:center;z-index:10}
+#callerBar h2{font-size:30px;margin:0;color:#ffeb3b;text-shadow:2px 2px 8px #000}
+#connecting{position:absolute;bottom:30px;left:0;right:0;text-align:center;color:#fff;font-size:15px;text-shadow:1px 1px 4px #000}
+#mySmall{position:absolute;bottom:15px;right:15px;width:110px;height:150px;object-fit:cover;border-radius:12px;border:2px solid #fff;z-index:11}
+</style>
+</head>
+<body>
+<header>🚀 ADSPUSH CALL - FINAL ✅</header>
+
+<div id="customerFull">
+  <div id="callerBar"><h2 id="callerNameDisplay">MUSA is calling you!</h2></div>
+  <video id="customerMainVideo" autoplay playsinline></video>
+  <video id="mySmall" autoplay muted playsinline></video>
+  <div id="connecting">Connecting...</div>
+</div>
+
+<div id="sellerSection">
+<div class="box" style="border:2px solid #00a884">
+<h3>👤 YOUR NAME - CUSTOMER SEES THIS (NO NUMBER)</h3>
+<input id="myNameInput" placeholder="Your Shop Name" value="MUSA">
+<p style="color:#25D366;font-size:13px">✅ Number HIDDEN - Only name shows</p>
+</div>
+
+<div class="box">
+<h3>1. UPLOAD YOUR AD - THIS BECOMES YOUR FACE</h3>
+<input type="file" id="adUpload" accept="image/*,video/*">
+<img id="myAdPhoto" style="width:100%;display:none;border-radius:15px">
+<video id="myAdVideo" loop muted playsinline style="width:100%;display:none"></video>
+<p id="adStatus" style="color:#ffeb3b">No AD yet - Upload first!</p>
+<button id="btnAd" onclick="setMode('ad')" class="active">🎬 MY AD AS MY FACE ✅</button>
+<button id="btnFace" onclick="setMode('face')">📷 MY REAL FACE</button>
+<p id="modeText">Mode: AD AS FACE</p>
+</div>
+
+<div class="box">
+<h3>2. CHOOSE COUNTRY</h3>
+<select id="langSelect">
+<option value="en-US">🇺🇸 English</option>
+<option value="fr-FR">🇫🇷 French</option>
+<option value="es-ES">🇪🇸 Spanish</option>
+<option value="es-MX">🇲🇽 Mexican</option>
+<option value="ar-SA">🇸🇦 Saudi Arabic</option>
+<option value="ar-EG">🇪🇬 Egypt</option>
+<option value="ar-KW">🇰🇼 Kuwait</option>
+<option value="ar-AE">🇦🇪 UAE</option>
+<option value="ar-QA">🇶🇦 Qatar</option>
+<option value="it-IT">🇮🇹 Italian</option>
+<option value="ja-JP">🇯🇵 Japan</option>
+<option value="ko-KR">🇰🇷 Korea</option>
+<option value="zh-CN">🇨🇳 Chinese</option>
+<option value="hi-IN">🇮🇳 Hindi</option>
+<option value="pt-BR">🇧🇷 Brazil</option>
+<option value="de-DE">🇩🇪 German</option>
+<option value="ru-RU">🇷🇺 Russian</option>
+<option value="tr-TR">🇹🇷 Turkish</option>
+<option value="yo-NG">🇳🇬 Yoruba</option>
+<option value="ig-NG">🇳🇬 Igbo</option>
+<option value="ha-NG">🇳🇬 Hausa</option>
+</select>
+<button onclick="startTrans()">🎤 START FAST TRANSLATION</button>
+<button onclick="stopTrans()" style="background:#ff3b30">⏹ STOP</button>
+<p id="heard">Heard: ---</p><p id="translated">Translated: ---</p>
+</div>
+
+<div class="box">
+<h3>3. VIDEO CALL - AUTO JOIN</h3>
+<p id="myIdText">Loading...</p>
+<button class="big" onclick="createLink()">🔗 CREATE LINK</button>
+<button onclick="copyLink()">📋 COPY & SHARE</button>
+<p id="callStatus">Upload AD, Choose Country, CREATE LINK</p>
+</div>
+</div>
+
+<div class="box" id="videoBox">
+<video id="myVideo" autoplay muted playsinline style="max-height:260px"></video>
+<video id="remoteVideo" autoplay playsinline style="max-height:260px"></video>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer, myId, callerId=null, currentMode='ad';
+peer=new Peer();
+peer.on('open',id=>{myId=id; checkUrl();});
+peer.on('call',call=>{ getFinalStream().then(s=>{ document.getElementById('myVideo').srcObject=s; call.answer(s); call.on('stream',rs=>{document.getElementById('remoteVideo').srcObject=rs;}); }); });
+async function getFinalStream(){
+ if(currentMode==='ad'){
+  let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto');
+  if(v.src && v.style.display!=='none'){ v.muted=true; v.play(); let vs=v.captureStream?v.captureStream():v.mozCaptureStream(); let mic=await navigator.mediaDevices.getUserMedia({audio:true,video:false}); return new MediaStream([...vs.getVideoTracks(),...mic.getAudioTracks()]);}
+  if(p.src && p.style.display!=='none'){ let c=document.createElement('canvas'); c.width=640; c.height=360; let ctx=c.getContext('2d'); setInterval(()=>ctx.drawImage(p,0,0,640,360),100); let vs=c.captureStream(30); let mic=await navigator.mediaDevices.getUserMedia({audio:true,video:false}); return new MediaStream([...vs.getVideoTracks(),...mic.getAudioTracks()]);}
+ }
+ return await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+}
+function setMode(m){currentMode=m;document.getElementById('btnAd').className=m==='ad'?'active':'';document.getElementById('btnFace').className=m==='face'?'active':'';document.getElementById('modeText').innerText=m==='ad'?'Mode: AD AS FACE ✅':'Mode: My Real Face';}
+function checkUrl(){
+ let p=new URLSearchParams(location.search);
+ if(p.get('call')){
+   document.body.classList.add('customer');
+   callerId=p.get('call');
+   let name=p.get('name')?decodeURIComponent(p.get('name')):'MUSA';
+   document.getElementById('callerNameDisplay').innerText=name+' is calling you!';
+   setTimeout(()=>joinCall(),800);
+   setTimeout(()=>joinCall(),3000);
+ }
+}
+async function joinCall(){
+ if(!callerId) return;
+ try{
+   let s=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+   document.getElementById('mySmall').srcObject=s;
+   document.getElementById('connecting').innerText='';
+   let c=peer.call(callerId,s); c.on('stream',rs=>{document.getElementById('customerMainVideo').srcObject=rs; document.getElementById('connecting').innerText='';});
+ }catch(e){ document.getElementById('connecting').innerText='Allow camera to see video'; }
+}
+function createLink(){ let n=document.getElementById('myNameInput').value||'MUSA'; window.myLink=location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n); alert('Link ready! Customer sees ONLY name + FULL VIDEO!');}
+function copyLink(){ let n=document.getElementById('myNameInput').value||'MUSA'; let link=window.myLink||(location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n)); navigator.clipboard.writeText('Hi! This is '+n+' 👋 Click to see live 👇\n'+link); alert('Copied! Share it!');}
+document.getElementById('adUpload').addEventListener('change',e=>{let f=e.target.files[0];let u=URL.createObjectURL(f);if(f.type.startsWith('image')){let i=document.getElementById('myAdPhoto');i.src=u;i.style.display='block';document.getElementById('myAdVideo').style.display='none';document.getElementById('adStatus').innerText='Photo AD ready ✅';}else{let v=document.getElementById('myAdVideo');v.src=u;v.style.display='block';v.play();document.getElementById('myAdPhoto').style.display='none';document.getElementById('adStatus').innerText='Video AD ready ✅';}});
+let rec;function startTrans(){ let lang=document.getElementById('langSelect').value; let S=window.SpeechRecognition||window.webkitSpeechRecognition; rec=new S(); rec.lang='en-US'; rec.continuous=true; rec.interimResults=true; rec.onresult=async e=>{let t=e.results[e.results.length-1][0].transcript; if(!e.results[e.results.length-1].isFinal) return; document.getElementById('heard').innerText='Heard: '+t; let tg=lang.split('-')[0]; let r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(t)}&langpair=en|${tg}`); let d=await r.json(); let tr=d.responseData.translatedText; document.getElementById('translated').innerText='Translated: '+tr; let u=new SpeechSynthesisUtterance(tr); u.lang=lang; u.rate=1.1; speechSynthesis.speak(u);}; rec.start();}
+function stopTrans(){ if(rec) rec.stop(); }
+</script>
+</body>
+    </html>
