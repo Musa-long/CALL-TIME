@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADSPUSH V19 DATA TRANSLATION</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b141a;color:#fff;font-family:Arial;text-align:center}
+header{background:#00a884;padding:16px;font-size:19px;font-weight:bold}
+.box{background:#111b21;margin:10px;padding:14px;border-radius:16px}
+button{background:#00a884;border:none;color:#fff;padding:13px 18px;border-radius:25px;margin:5px;font-size:15px;font-weight:bold}
+button.big{background:#25D366;padding:16px 30px;font-size:18px}
+input,select{width:95%;padding:13px;margin:8px;border-radius:10px;border:none;font-size:16px;text-align:center}
+video{width:100%;background:#000;border-radius:12px}
+#customerFull{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999}
+#customerFull.show{display:block}
+#customerMainVideo{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+#callerBar{position:absolute;top:0;left:0;right:0;padding:12px;background:#000000d9;z-index:10}
+#callerBar h2{font-size:26px;color:#ffeb3b}
+#callerBar p{font-size:13px;color:#25D366}
+#mySmall{position:absolute;top:78px;right:10px;width:90px;height:120px;object-fit:cover;border:2px solid #fff;border-radius:10px;z-index:11}
+#buyerBigBox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:1000}
+#buyerBigBox.show{display:block}
+#buyerBigVideo{width:100%;height:85%;object-fit:cover}
+.phrase{background:#ff9800;color:#000;width:46%;padding:13px 8px;font-size:14px;margin:4px;border-radius:15px}
+</style>
+</head>
+<body>
+<header>🚀 ADSPUSH V19 ✅ DATA TRANSLATION - NO ECHO</header>
+<div id="buyerBigBox"><h2 style="padding:15px;color:#ffeb3b">👀 BUYER FACE</h2><video id="buyerBigVideo" autoplay playsinline></video><button class="big" onclick="closeBuyerBig()">⬅️ BACK</button></div>
+<div id="customerFull">
+  <div id="callerBar"><h2 id="callerNameDisplay">Joe is calling you!</h2><p>🎬 Watching LIVE AD - Just speak!</p><p id="buyerStatusBar" style="color:#ffeb3b;font-size:13px">Connecting...</p></div>
+  <video id="customerMainVideo" autoplay playsinline></video>
+  <video id="mySmall" autoplay muted playsinline></video>
+</div>
+<div id="sellerSection">
+<div class="box" style="border:2px solid #00a884"><h3>👤 SELLER</h3><input id="myNameInput" value="Joe"><p id="myIdText">⏳ Loading...</p><p id="peerStatus" style="color:#ff3b30">Peer: Not ready</p><button onclick="retryPeer()" style="background:#ff9800;color:#000">🔄 RETRY</button></div>
+<div class="box"><h3>1. UPLOAD AD - BUYER SEES AS FACE</h3><input type="file" id="adUpload" accept="image/*,video/*"><img id="myAdPhoto" style="width:100%;display:none"><video id="myAdVideo" loop muted playsinline style="width:100%;display:none"></video><p id="adStatus" style="color:#ffeb3b">No AD yet</p><button onclick="testAd()">▶️ TEST MY AD</button><p id="testResult"></p></div>
+<div class="box"><h3>👀 BUYER FACE</h3><p id="buyerStatus" style="color:#ff3b30">No buyer yet</p><button class="big" onclick="showBuyerBig()">👀 SEE BUYER FACE BIG</button></div>
+<div class="box" style="border:3px solid #ffeb3b">
+<h3>2. LIVE TRANSLATION - V19 DATA - NO ECHO</h3>
+<p style="font-size:14px;color:#ffeb3b">Seller speaks English -> Buyer phone speaks French BY ITSELF!<br>Buyer speaks French -> Your phone speaks English BY ITSELF!</p>
+<select id="langSelect">
+<option value="fr-FR">🇫🇷 French</option>
+<option value="ha-NG">🇳🇬 HAUSA</option>
+<option value="yo-NG">🇳🇬 YORUBA</option>
+<option value="ig-NG">🇳🇬 IGBO</option>
+<option value="es-ES">🇪🇸 Spanish</option>
+<option value="ar-EG">🇪🇬 Egypt</option>
+<option value="ar-SA">🇸🇦 Saudi</option>
+<option value="ar-KW">🇰🇼 Kuwait</option>
+<option value="ar-AE">🇦🇪 UAE</option>
+<option value="da-DK">🇩🇰 DENMARK</option>
+<option value="he-IL">🇮🇱 ISRAEL</option>
+<option value="it-IT">🇮🇹 Italian</option>
+<option value="ja-JP">🇯🇵 Japan</option>
+<option value="ko-KR">🇰🇷 Korea</option>
+<option value="zh-CN">🇨🇳 Chinese</option>
+<option value="hi-IN">🇮🇳 Hindi</option>
+<option value="pt-BR">🇧🇷 Brazil</option>
+</select><br>
+<div style="background:#000;padding:12px;border-radius:12px">
+<p id="sellerHeard" style="color:#25D366;font-size:16px">🎤 Heard: ---</p>
+<p id="sellerTranslated" style="color:#ffeb3b;font-size:16px">📤 Sent to buyer (French): ---</p>
+<p id="buyerSaidSeller" style="color:#2196F3;font-size:16px">📥 Buyer said (French): ---</p>
+<p id="buyerToYou" style="color:#fff;font-size:16px">🔊 You hear (English): ---</p>
+<p id="transDebug" style="color:#fff">Ready</p>
+<p id="dataStatus" style="color:#ff3b30">Data channel: Not connected</p>
+</div>
+<button class="big" onclick="testDataTranslation()" style="background:#ffeb3b;color:#000">🧪 TEST DATA - Buyer should hear French NOW!</button>
+<button id="startLiveBtn" class="big" onclick="startLiveTrans()">🎤 START LIVE TRANSLATION</button>
+<button onclick="stopLiveTrans()" style="background:#ff3b30">⏹ STOP</button>
+<p style="font-size:13px">Your mic is OFF - Buyer hears ONLY French from his own phone!</p>
+<input id="typeBox" placeholder="Type English"><button onclick="typeTranslate()">🔊 SEND AS FRENCH TO BUYER</button>
+<button class="phrase" onclick="quickPhrase('Hello how are you?')">👋 Hello how are you?</button>
+<button class="phrase" onclick="quickPhrase('This is very good product')">⭐ Very good product</button>
+<button class="phrase" onclick="quickPhrase('How much do you want to buy?')">💰 How much?</button>
+<button class="phrase" onclick="quickPhrase('The price is cheap')">💸 Price cheap</button>
+</div>
+<div class="box"><h3>3. CREATE LINK</h3><button class="big" onclick="createLink()">🔗 CREATE LINK</button><button onclick="copyLink()">📋 COPY & SHARE</button><p id="linkShow" style="word-break:break-all;font-size:13px;color:#ffeb3b;background:#000;padding:8px"></p></div>
+</div>
+<div class="box"><p>Preview: AD | Buyer</p><video id="myVideo" autoplay muted playsinline style="max-height:200px"></video><video id="remoteVideo" autoplay playsinline style="max-height:220px;border:3px solid #ffeb3b"></video></div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer, myId, callerId=null, currentMode='ad', myLink='', dataConn=null, buyerDataConn=null;
+let liveOn=false, sellerRec=null, buyerRec=null, buyerAutoStarted=false;
+let params=new URLSearchParams(location.search);
+let isCustomer=params.has('call');
+let buyerLangFromLink='fr-FR';
+if(isCustomer){ document.getElementById('customerFull').classList.add('show'); let n=params.get('name')?decodeURIComponent(params.get('name')):'Joe'; document.getElementById('callerNameDisplay').innerText=n+' is calling you! 🎬 AD LIVE'; callerId=params.get('call'); buyerLangFromLink=params.get('lang')||'fr-FR'; }
+function getFixedId(){ let name=document.getElementById('myNameInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'')||'joe'; return 'adspush-'+name+'-2026'; }
+function initPeer(){
+ if(typeof Peer==='undefined'){document.getElementById('myIdText').innerText='❌ Peer blocked';return;}
+ let idToUse = isCustomer ? undefined : getFixedId();
+ peer=new Peer(idToUse, {config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'}]}});
+ peer.on('open',id=>{myId=id; document.getElementById('myIdText').innerText='✅ READY! ID: '+id; document.getElementById('peerStatus').innerText='✅ Peer READY'; document.getElementById('peerStatus').style.color='#25D366'; if(isCustomer){ setTimeout(customerJoinAuto, 500); }});
+ peer.on('error',e=>{ if(isCustomer) document.getElementById('buyerStatusBar').innerText='⚠️ '+e.type+' - Retrying...'; if(e.type==='peer-unavailable') setTimeout(customerJoinAuto,3000); });
+ peer.on('connection',conn=>{ buyerDataConn=conn; conn.on('data',data=>{ handleData(data); }); conn.on('open',()=>{ document.getElementById('dataStatus').innerText='✅ Data connected - Translation ready!'; document.getElementById('dataStatus').style.color='#25D366'; }); });
+ peer.on('call',call=>{ getSellerStream().then(s=>{document.getElementById('myVideo').srcObject=s; call.answer(s); call.on('stream',rs=>{document.getElementById('remoteVideo').srcObject=rs; document.getElementById('remoteVideo').play().catch(()=>{}); document.getElementById('buyerBigVideo').srcObject=rs; document.getElementById('buyerStatus').innerText='✅ BUYER JOINED!'; document.getElementById('buyerStatus').style.color='#25D366';});});});
+}
+function retryPeer(){initPeer();} initPeer();
+function showBuyerBig(){ let rv=document.getElementById('remoteVideo'); if(!rv.srcObject){alert('No buyer yet!');return;} document.getElementById('buyerBigBox').classList.add('show');}
+function closeBuyerBig(){ document.getElementById('buyerBigBox').classList.remove('show');}
+function testAd(){let v=document.getElementById('myAdVideo');let p=document.getElementById('myAdPhoto');if(v.style.display!=='none'){v.muted=false;v.play();document.getElementById('testResult').innerText='✅ AD Playing!';}else if(p.style.display!=='none'){document.getElementById('testResult').innerText='✅ AD Photo!';}else document.getElementById('testResult').innerText='❌ No AD!';}
+async function getSellerStream(){
+ // V19 - VIDEO ONLY - AUDIO IS MUTED / NO MIC - Because translation goes via DATA, not audio!
+ // We send silent audio track so WebRTC works, but no direct voice!
+ let audioCtx=new (window.AudioContext||window.webkitAudioContext)(); let dest=audioCtx.createMediaStreamDestination(); // Silent
+ let audioTrack=dest.stream.getAudioTracks()[0];
+ let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto');
+ if(v.src && v.style.display!=='none'){ v.muted=true; v.loop=true; await v.play().catch(()=>{}); let vs=v.captureStream?v.captureStream():v.mozCaptureStream(); return new MediaStream([...vs.getVideoTracks(), audioTrack]); }
+ if(p.src && p.style.display!=='none'){ let c=document.createElement('canvas'); c.width=640; c.height=360; let ctx=c.getContext('2d'); setInterval(()=>ctx.drawImage(p,0,0,640,360),80); let vs=c.captureStream(30); return new MediaStream([...vs.getVideoTracks(), audioTrack]); }
+ let s=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); s.addTrack(audioTrack); return s;
+}
+async function customerJoinAuto(){
+ try{
+  let s=null; try{ s=await navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:true}}); document.getElementById('mySmall').srcObject=s; document.getElementById('mySmall').play().catch(()=>{}); }catch(e){ s=new MediaStream(); }
+  // Connect DATA channel for translation - This is key!
+  dataConn=peer.connect(callerId); dataConn.on('open',()=>{ document.getElementById('buyerStatusBar').innerText='✅ Data connected - Translation ready!'; });
+  dataConn.on('data',data=>{ handleBuyerData(data); });
+  let c=peer.call(callerId, s||new MediaStream());
+  c.on('stream', rs=>{ let mv=document.getElementById('customerMainVideo'); mv.srcObject=rs; mv.play().then(()=>{ document.getElementById('buyerStatusBar').innerText='✅ LIVE AD - Speak your language!'; if(!buyerAutoStarted){ buyerAutoStarted=true; setTimeout(buyerAutoTrans, 800); } }); });
+ }catch(e){ setTimeout(customerJoinAuto,3000); }
+}
+function handleData(data){
+ // Seller receives data from buyer - Buyer French -> English
+ try{
+  let obj=typeof data==='string'?JSON.parse(data):data;
+  if(obj.type==='buyer_to_seller'){
+    document.getElementById('buyerSaidSeller').innerText='📥 Buyer said ('+obj.lang+'): '+obj.original;
+    document.getElementById('buyerToYou').innerText='🔊 You hear (English): '+obj.translated;
+    // Seller phone speaks English BY ITSELF
+    let u=new SpeechSynthesisUtterance(obj.translated); u.lang='en-US'; u.volume=1; speechSynthesis.speak(u);
+  }
+ }catch(e){}
+}
+function handleBuyerData(data){
+ // Buyer receives data from seller - Seller English -> French
+ try{
+  let obj=typeof data==='string'?JSON.parse(data):data;
+  if(obj.type==='seller_to_buyer'){
+    document.getElementById('buyerStatusBar').innerText='🔊 Seller: '+obj.translated;
+    // Buyer phone speaks French BY ITSELF - Clean!
+    let lang=buyerLangFromLink; let u=new SpeechSynthesisUtterance(obj.translated); u.lang=lang; u.volume=1; speechSynthesis.speak(u);
+  }
+ }catch(e){}
+}
+function createLink(){ if(!myId){alert('Wait READY');return;} let n=document.getElementById('myNameInput').value||'Joe'; let lang=document.getElementById('langSelect').value; myLink=location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n)+'&lang='+lang; document.getElementById('linkShow').innerText=myLink; alert('Link created! Data translation!');}
+function copyLink(){ if(!myLink) createLink(); navigator.clipboard.writeText('Hi! This is '+document.getElementById('myNameInput').value+' 👋 Click to see my AD live 👇\n'+myLink); alert('Copied!');}
+document.getElementById('adUpload').addEventListener('change',e=>{let f=e.target.files[0];let u=URL.createObjectURL(f);if(f.type.startsWith('image')){let i=document.getElementById('myAdPhoto');i.src=u;i.style.display='block';document.getElementById('myAdVideo').style.display='none';document.getElementById('adStatus').innerText='✅ Photo AD ready!';}else{let v=document.getElementById('myAdVideo');v.src=u;v.style.display='block';v.play();document.getElementById('myAdPhoto').style.display='none';document.getElementById('adStatus').innerText='✅ Video AD ready!';}});
+async function translateText(text, from, to){ try{ let r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`); let d=await r.json(); let tr=d.responseData.translatedText; if(tr && tr!==text) return tr; }catch(e){} return text; }
+function sendToBuyer(original, translated, tg){
+ let payload={type:'seller_to_buyer', original:original, translated:translated, lang:tg};
+ if(buyerDataConn && buyerDataConn.open){ buyerDataConn.send(JSON.stringify(payload)); document.getElementById('dataStatus').innerText='✅ Sent to buyer: '+translated; }
+ else { document.getElementById('dataStatus').innerText='❌ Data not connected - Buyer not joined yet!'; }
+ // Also speak locally on seller phone so seller hears French too
+ let u=new SpeechSynthesisUtterance(translated); u.lang=document.getElementById('langSelect').value; speechSynthesis.speak(u);
+}
+async function testDataTranslation(){
+ let tg=document.getElementById('langSelect').value.split('-')[0]; let tr=await translateText('Hello how are you?','en',tg);
+ document.getElementById('sellerTranslated').innerText='📤 Sent to buyer (French): '+tr;
+ sendToBuyer('Hello how are you?', tr, tg);
+ alert('TEST: Did buyer phone speak French: '+tr+'? If YES, data works!');
+}
+function startLiveTrans(){
+ liveOn=true; let targetLang=document.getElementById('langSelect').value; let tg=targetLang.split('-')[0];
+ document.getElementById('transDebug').innerText='✅ LIVE ON - Your voice OFF - Buyer hears ONLY French from his phone!';
+ document.getElementById('startLiveBtn').innerText='🔴 LIVE ON - Speak English!';
+ let S=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!S){ document.getElementById('transDebug').innerText='❌ Browser no live mic - Use Chrome - Use TYPE!'; return; }
+ sellerRec=new S(); sellerRec.lang='en-US'; sellerRec.continuous=true; sellerRec.interimResults=false;
+ sellerRec.onresult=async e=>{ let t=e.results[e.results.length-1][0].transcript; document.getElementById('sellerHeard').innerText='🎤 Heard: '+t; let tr=await translateText(t,'en',tg); document.getElementById('sellerTranslated').innerText='📤 Sent to buyer: '+tr; sendToBuyer(t,tr,tg); };
+ sellerRec.onerror=e=>{ document.getElementById('transDebug').innerText='Mic error: '+e.error; };
+ sellerRec.onend=()=>{ if(liveOn) sellerRec.start(); };
+ sellerRec.start(); alert('LIVE ON! Speak English - Buyer phone will speak French!');
+}
+function stopLiveTrans(){ liveOn=false; if(sellerRec) sellerRec.stop(); document.getElementById('transDebug').innerText='Stopped'; document.getElementById('startLiveBtn').innerText='🎤 START LIVE TRANSLATION'; }
+function buyerAutoTrans(){
+ let buyerLang=buyerLangFromLink; let bg=buyerLang.split('-')[0];
+ document.getElementById('buyerStatusBar').innerText='✅ Auto - Speak '+buyerLang+'!';
+ let S=window.SpeechRecognition||window.webkitSpeechRecognition; if(!S) return;
+ buyerRec=new S(); buyerRec.lang=buyerLang; buyerRec.continuous=true; buyerRec.interimResults=false;
+ buyerRec.onresult=async e=>{ let t=e.results[e.results.length-1][0].transcript; let tr=await translateText(t,bg,'en'); let payload={type:'buyer_to_seller', original:t, translated:tr, lang:buyerLang}; if(dataConn && dataConn.open) dataConn.send(JSON.stringify(payload)); // Also speak English locally on buyer phone for buyer to hear
+  let u=new SpeechSynthesisUtterance(tr); u.lang='en-US'; speechSynthesis.speak(u); };
+ buyerRec.onerror=e=>{}; buyerRec.onend=()=>{ buyerRec.start(); }; buyerRec.start();
+}
+async function speakTranslatedPhrase(text){ let tg=document.getElementById('langSelect').value.split('-')[0]; let tr=await translateText(text,'en',tg); document.getElementById('sellerTranslated').innerText='📤 Sent to buyer: '+tr; sendToBuyer(text,tr,tg); }
+function quickPhrase(txt){ speakTranslatedPhrase(txt); }
+function typeTranslate(){ let txt=document.getElementById('typeBox').value; if(!txt){alert('Type English first!');return;} speakTranslatedPhrase(txt); }
+</script>
+</body>
+    </html>
