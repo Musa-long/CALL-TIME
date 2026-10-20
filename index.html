@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADSPUSH V22 WRITING ONLY SELLER</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b141a;color:#fff;font-family:Arial;text-align:center}
+header{background:#00a884;padding:16px;font-size:19px;font-weight:bold}
+.box{background:#111b21;margin:10px;padding:14px;border-radius:16px}
+button{background:#00a884;border:none;color:#fff;padding:13px 18px;border-radius:25px;margin:5px;font-size:15px;font-weight:bold}
+button.big{background:#25D366;padding:16px 30px;font-size:18px}
+input,select{width:95%;padding:13px;margin:8px;border-radius:10px;border:none;font-size:16px;text-align:center}
+video{width:100%;background:#000;border-radius:12px}
+#customerFull{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999}
+#customerFull.show{display:block}
+#customerMainVideo{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+#callerBar{position:absolute;top:0;left:0;right:0;padding:12px;background:#000000d9;z-index:10}
+#callerBar h2{font-size:26px;color:#ffeb3b}
+#callerBar p{font-size:13px;color:#25D366}
+#mySmall{position:absolute;top:78px;right:10px;width:90px;height:120px;object-fit:cover;border:2px solid #fff;border-radius:10px;z-index:11}
+#buyerBigBox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:1000}
+#buyerBigBox.show{display:block}
+#buyerBigVideo{width:100%;height:75%;object-fit:cover}
+.phrase{background:#ff9800;color:#000;width:46%;padding:13px 8px;font-size:14px;margin:4px;border-radius:15px}
+#sellerWriting{background:#000;padding:14px;border-radius:12px;border:3px solid #ffeb3b;margin:10px}
+</style>
+</head>
+<body>
+<header>🚀 ADSPUSH V22 ✅ WRITING ONLY SELLER</header>
+<div id="buyerBigBox"><h2 style="padding:15px;color:#ffeb3b">👀 BUYER FACE</h2><video id="buyerBigVideo" autoplay playsinline muted></video><div style="background:#000;padding:10px">Buyer said: <span id="buyerWritingBig">---</span></div><button class="big" onclick="closeBuyerBig()">⬅️ BACK</button></div>
+<div id="customerFull">
+  <div id="callerBar"><h2 id="callerNameDisplay">Joe is calling you!</h2><p>🎬 Watching LIVE AD</p></div>
+  <video id="customerMainVideo" autoplay playsinline muted></video>
+  <video id="mySmall" autoplay muted playsinline></video>
+  <!-- BUYER HAS NO WRITING BAR ANYMORE! -->
+</div>
+<div id="sellerSection">
+<div class="box" style="border:2px solid #00a884"><h3>👤 SELLER</h3><input id="myNameInput" value="Joe"><p id="myIdText">⏳ Loading...</p><p id="peerStatus" style="color:#ff3b30">Peer: Not ready</p><button onclick="retryPeer()" style="background:#ff9800;color:#000">🔄 RETRY</button></div>
+<div class="box"><h3>1. UPLOAD AD - BUYER SEES AS FACE</h3><input type="file" id="adUpload" accept="image/*,video/*"><img id="myAdPhoto" style="width:100%;display:none"><video id="myAdVideo" loop muted playsinline style="width:100%;display:none"></video><p id="adStatus" style="color:#ffeb3b">No AD yet</p><button onclick="testAd()">▶️ TEST MY AD</button><p id="testResult"></p></div>
+<div class="box"><h3>👀 BUYER FACE</h3><p id="buyerStatus" style="color:#ff3b30">No buyer yet</p><button class="big" onclick="showBuyerBig()">👀 SEE BUYER FACE BIG</button></div>
+<div class="box" style="border:3px solid #ffeb3b">
+<h3>2. LIVE TRANSLATION - V22 - WRITING ONLY SELLER</h3>
+<p style="font-size:14px;color:#ffeb3b">Buyer sees NO writing - Only AD + Voice!<br>You (Seller) see ALL writing!</p>
+<select id="langSelect">
+<option value="fr-FR">🇫🇷 French</option>
+<option value="ha-NG">🇳🇬 HAUSA</option>
+<option value="yo-NG">🇳🇬 YORUBA</option>
+<option value="ig-NG">🇳🇬 IGBO</option>
+<option value="es-ES">🇪🇸 Spanish</option>
+<option value="ar-EG">🇪🇬 Egypt</option>
+<option value="ar-SA">🇸🇦 Saudi</option>
+<option value="ar-KW">🇰🇼 Kuwait</option>
+<option value="ar-AE">🇦🇪 UAE</option>
+<option value="da-DK">🇩🇰 DENMARK</option>
+<option value="he-IL">🇮🇱 ISRAEL</option>
+<option value="it-IT">🇮🇹 Italian</option>
+<option value="ja-JP">🇯🇵 Japan</option>
+<option value="ko-KR">🇰🇷 Korea</option>
+<option value="zh-CN">🇨🇳 Chinese</option>
+<option value="hi-IN">🇮🇳 Hindi</option>
+<option value="pt-BR">🇧🇷 Brazil</option>
+</select><br>
+<div id="sellerWriting">
+<p style="color:#25D366;font-size:16px" id="sellerHeard">🎤 You said: ---</p>
+<p style="color:#ffeb3b;font-size:16px" id="sellerTranslated">📤 Buyer hears (French): ---</p>
+<hr style="margin:8px">
+<p style="color:#2196F3;font-size:18px" id="buyerSaidSeller">📥 Buyer said (French): ---</p>
+<p style="color:#fff;font-size:22px;font-weight:bold" id="buyerToYou">🔊 You hear (English): ---</p>
+<p style="color:#ffeb3b;font-size:14px" id="transDebug">Ready - Writing only seller!</p>
+<p id="dataStatus" style="color:#ff3b30">Data: Not connected</p>
+</div>
+<button class="big" onclick="testDataTranslation()" style="background:#ffeb3b;color:#000">🧪 TEST - Buyer hears French voice only!</button>
+<button class="big" onclick="testBuyerToSeller()" style="background:#2196F3">🧪 TEST BUYER->YOU - You see writing + Hear English!</button>
+<button id="startLiveBtn" class="big" onclick="startLiveTrans()">🎤 START LIVE TRANSLATION</button>
+<button onclick="stopLiveTrans()" style="background:#ff3b30">⏹ STOP</button>
+<input id="typeBox" placeholder="Type English"><button onclick="typeTranslate()">🔊 SEND TO BUYER</button>
+<button class="phrase" onclick="quickPhrase('Hello how are you?')">👋 Hello how are you?</button>
+<button class="phrase" onclick="quickPhrase('This is very good product')">⭐ Very good product</button>
+<button class="phrase" onclick="quickPhrase('How much do you want to buy?')">💰 How much?</button>
+<button class="phrase" onclick="quickPhrase('The price is cheap')">💸 Price cheap</button>
+</div>
+<div class="box"><h3>3. CREATE LINK</h3><button class="big" onclick="createLink()">🔗 CREATE LINK</button><button onclick="copyLink()">📋 COPY & SHARE</button><p id="linkShow" style="word-break:break-all;font-size:13px;color:#ffeb3b;background:#000;padding:8px"></p></div>
+</div>
+<div class="box"><p>Preview: AD (muted) | Buyer (muted - no French voice)</p><video id="myVideo" autoplay muted playsinline style="max-height:200px"></video><video id="remoteVideo" autoplay playsinline muted style="max-height:220px;border:3px solid #ffeb3b"></video></div>
+<audio id="loudAudio"></audio>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer, myId, callerId=null, currentMode='ad', myLink='', dataConn=null, buyerDataConn=null;
+let liveOn=false, sellerRec=null, buyerRec=null, buyerAutoStarted=false, isSpeaking=false;
+let params=new URLSearchParams(location.search);
+let isCustomer=params.has('call');
+let buyerLangFromLink='fr-FR';
+if(isCustomer){ document.getElementById('customerFull').classList.add('show'); let n=params.get('name')?decodeURIComponent(params.get('name')):'Joe'; document.getElementById('callerNameDisplay').innerText=n+' is calling you! 🎬 AD LIVE'; callerId=params.get('call'); buyerLangFromLink=params.get('lang')||'fr-FR'; }
+function getFixedId(){ let name=document.getElementById('myNameInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'')||'joe'; return 'adspush-'+name+'-2026'; }
+function initPeer(){
+ if(typeof Peer==='undefined'){document.getElementById('myIdText').innerText='❌ Peer blocked';return;}
+ let idToUse = isCustomer ? undefined : getFixedId();
+ peer=new Peer(idToUse, {config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'}]}});
+ peer.on('open',id=>{myId=id; document.getElementById('myIdText').innerText='✅ READY! ID: '+id; document.getElementById('peerStatus').innerText='✅ Peer READY'; document.getElementById('peerStatus').style.color='#25D366'; if(isCustomer){ setTimeout(customerJoinAuto, 500); }});
+ peer.on('error',e=>{ if(e.type==='peer-unavailable') setTimeout(customerJoinAuto,3000); });
+ peer.on('connection',conn=>{ buyerDataConn=conn; conn.on('data',data=>{ handleData(data); }); conn.on('open',()=>{ document.getElementById('dataStatus').innerText='✅ Data connected - Writing only seller!'; document.getElementById('dataStatus').style.color='#25D366'; }); });
+ peer.on('call',call=>{ getSellerStream().then(s=>{document.getElementById('myVideo').srcObject=s; call.answer(s); call.on('stream',rs=>{ rs.getAudioTracks().forEach(t=>t.enabled=false); document.getElementById('remoteVideo').srcObject=rs; document.getElementById('remoteVideo').muted=true; document.getElementById('remoteVideo').volume=0; document.getElementById('remoteVideo').play().catch(()=>{}); document.getElementById('buyerBigVideo').srcObject=rs; document.getElementById('buyerBigVideo').muted=true; document.getElementById('buyerStatus').innerText='✅ BUYER JOINED!'; document.getElementById('buyerStatus').style.color='#25D366';});});});
+}
+function retryPeer(){initPeer();} initPeer();
+function showBuyerBig(){ let rv=document.getElementById('remoteVideo'); if(!rv.srcObject){alert('No buyer yet!');return;} document.getElementById('buyerBigBox').classList.add('show');}
+function closeBuyerBig(){ document.getElementById('buyerBigBox').classList.remove('show');}
+function testAd(){let v=document.getElementById('myAdVideo');let p=document.getElementById('myAdPhoto');if(v.style.display!=='none'){v.muted=false;v.play();document.getElementById('testResult').innerText='✅ AD Playing!';}else if(p.style.display!=='none'){document.getElementById('testResult').innerText='✅ AD Photo!';}else document.getElementById('testResult').innerText='❌ No AD!';}
+async function getSellerStream(){
+ let audioCtx=new (window.AudioContext||window.webkitAudioContext)(); let dest=audioCtx.createMediaStreamDestination(); let audioTrack=dest.stream.getAudioTracks()[0];
+ let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto');
+ if(v.src && v.style.display!=='none'){ v.muted=true; v.loop=true; await v.play().catch(()=>{}); let vs=v.captureStream?v.captureStream():v.mozCaptureStream(); return new MediaStream([...vs.getVideoTracks(), audioTrack]); }
+ if(p.src && p.style.display!=='none'){ let c=document.createElement('canvas'); c.width=640; c.height=360; let ctx=c.getContext('2d'); setInterval(()=>ctx.drawImage(p,0,0,640,360),80); let vs=c.captureStream(30); return new MediaStream([...vs.getVideoTracks(), audioTrack]); }
+ let s=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); s.addTrack(audioTrack); return s;
+}
+async function customerJoinAuto(){
+ try{
+  let s=null; try{ s=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); document.getElementById('mySmall').srcObject=s; document.getElementById('mySmall').play().catch(()=>{}); }catch(e){ s=new MediaStream(); }
+  dataConn=peer.connect(callerId); dataConn.on('data',data=>{ handleBuyerData(data); });
+  let c=peer.call(callerId, s||new MediaStream());
+  c.on('stream', rs=>{ rs.getAudioTracks().forEach(t=>t.enabled=false); let mv=document.getElementById('customerMainVideo'); mv.srcObject=rs; mv.muted=true; mv.play().then(()=>{ if(!buyerAutoStarted){ buyerAutoStarted=true; setTimeout(buyerAutoTrans, 1000); } }); });
+ }catch(e){ setTimeout(customerJoinAuto,3000); }
+}
+function speakLoud(text, langCode, langShort){
+ let audio=document.getElementById('loudAudio'); audio.volume=1.0; audio.src='https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl='+langShort+'&client=tw-ob'; audio.play().catch(()=>{});
+ try{ let u=new SpeechSynthesisUtterance(text); u.lang=langCode; u.volume=1; u.rate=0.85; u.pitch=1; let voices=speechSynthesis.getVoices(); let v=voices.find(v=>v.lang.startsWith(langShort)); if(v) u.voice=v; speechSynthesis.speak(u); }catch(e){}
+}
+function handleData(data){
+ try{
+  let obj=typeof data==='string'?JSON.parse(data):data;
+  if(obj.type==='buyer_to_seller'){
+    // SELLER ONLY WRITING - Buyer does NOT see this!
+    document.getElementById('buyerSaidSeller').innerText='📥 Buyer said (French): '+obj.original;
+    document.getElementById('buyerToYou').innerText='🔊 You hear (English): '+obj.translated;
+    document.getElementById('buyerWritingBig').innerText=obj.translated;
+    document.getElementById('transDebug').innerText='✅ Buyer translated - Writing only you see!';
+    isSpeaking=true; if(sellerRec) sellerRec.stop();
+    speakLoud(obj.translated, 'en-US', 'en');
+    setTimeout(()=>{ isSpeaking=false; if(liveOn && sellerRec) { try{sellerRec.start();}catch(e){} } }, 3500);
+  }
+ }catch(e){}
+}
+function handleBuyerData(data){
+ try{
+  let obj=typeof data==='string'?JSON.parse(data):data;
+  if(obj.type==='seller_to_buyer'){
+    // BUYER: Voice ONLY - NO writing! Seller writing is separate!
+    isSpeaking=true; if(buyerRec) buyerRec.stop();
+    speakLoud(obj.translated, buyerLangFromLink, buyerLangFromLink.split('-')[0]);
+    setTimeout(()=>{ isSpeaking=false; if(buyerRec) { try{buyerRec.start();}catch(e){} } }, 3500);
+  }
+ }catch(e){}
+}
+function createLink(){ if(!myId){alert('Wait READY');return;} let n=document.getElementById('myNameInput').value||'Joe'; let lang=document.getElementById('langSelect').value; myLink=location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n)+'&lang='+lang; document.getElementById('linkShow').innerText=myLink; alert('Link created! Writing only seller!');}
+function copyLink(){ if(!myLink) createLink(); navigator.clipboard.writeText('Hi! This is '+document.getElementById('myNameInput').value+' 👋 Click to see my AD live 👇\n'+myLink); alert('Copied!');}
+document.getElementById('adUpload').addEventListener('change',e=>{let f=e.target.files[0];let u=URL.createObjectURL(f);if(f.type.startsWith('image')){let i=document.getElementById('myAdPhoto');i.src=u;i.style.display='block';document.getElementById('myAdVideo').style.display='none';document.getElementById('adStatus').innerText='✅ Photo AD ready!';}else{let v=document.getElementById('myAdVideo');v.src=u;v.style.display='block';v.play();document.getElementById('myAdPhoto').style.display='none';document.getElementById('adStatus').innerText='✅ Video AD ready!';}});
+async function translateText(text, from, to){
+ let dict={'hello':'Bonjour','hello how are you?':'Bonjour comment allez-vous?','how are you?':'Comment allez-vous?','this is very good product':'Ceci est un tres bon produit','how much do you want to buy?':'Combien voulez-vous acheter?','the price is cheap':'Le prix est pas cher'};
+ let low=text.toLowerCase().trim(); if(to==='fr' && dict[low]) return dict[low];
+ try{ let r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`); let d=await r.json(); let tr=d.responseData.translatedText; if(tr && tr!==text && !tr.toLowerCase().includes('mymemory')) return tr; }catch(e){}
+ try{ let r2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`); let d2=await r2.json(); if(d2[0][0][0]) return d2[0][0][0]; }catch(e){}
+ return text;
+}
+function sendToBuyer(original, translated){
+ let payload={type:'seller_to_buyer', original:original, translated:translated};
+ if(buyerDataConn && buyerDataConn.open){ buyerDataConn.send(JSON.stringify(payload)); document.getElementById('dataStatus').innerText='✅ Sent to buyer (voice only): '+translated; }
+ else { document.getElementById('dataStatus').innerText='❌ Data not connected - Buyer not joined!'; }
+ speakLoud(translated, document.getElementById('langSelect').value, document.getElementById('langSelect').value.split('-')[0]);
+}
+async function testDataTranslation(){
+ let tg=document.getElementById('langSelect').value.split('-')[0]; let tr=await translateText('Hello how are you?','en',tg);
+ document.getElementById('sellerTranslated').innerText='📤 Buyer hears (French voice): '+tr; sendToBuyer('Hello how are you?', tr); alert('TEST: Buyer heard French voice? Buyer should see NO writing!');
+}
+function testBuyerToSeller(){
+ let tr='Hello I want to buy this product'; document.getElementById('buyerSaidSeller').innerText='📥 Buyer said (French): Bonjour je veux acheter ce produit'; document.getElementById('buyerToYou').innerText='🔊 You hear (English): '+tr; speakLoud(tr,'en-US','en'); alert('TEST: Did YOU see writing + Hear English?');
+}
+function startLiveTrans(){
+ liveOn=true; let targetLang=document.getElementById('langSelect').value; let tg=targetLang.split('-')[0];
+ document.getElementById('transDebug').innerText='✅ LIVE ON - Writing only you see!';
+ document.getElementById('startLiveBtn').innerText='🔴 LIVE ON - Speak English!';
+ let S=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!S){ document.getElementById('transDebug').innerText='❌ Browser no live mic - Use Chrome - Use TYPE!'; return; }
+ sellerRec=new S(); sellerRec.lang='en-US'; sellerRec.continuous=true; sellerRec.interimResults=false;
+ sellerRec.onresult=async e=>{ if(isSpeaking) return; let t=e.results[e.results.length-1][0].transcript; document.getElementById('sellerHeard').innerText='🎤 You said: '+t; let tr=await translateText(t,'en',tg); document.getElementById('sellerTranslated').innerText='📤 Buyer hears (French voice): '+tr; sendToBuyer(t,tr); };
+ sellerRec.onerror=e=>{ if(e.error==='aborted') return; document.getElementById('transDebug').innerText='Mic error: '+e.error; };
+ sellerRec.onend=()=>{ if(liveOn && !isSpeaking) setTimeout(()=>{ try{sellerRec.start();}catch(e){} },500); };
+ sellerRec.start(); alert('LIVE ON! Writing only seller!');
+}
+function stopLiveTrans(){ liveOn=false; if(sellerRec) sellerRec.stop(); document.getElementById('transDebug').innerText='Stopped'; document.getElementById('startLiveBtn').innerText='🎤 START LIVE TRANSLATION'; }
+function buyerAutoTrans(){
+ let buyerLang=buyerLangFromLink; let bg=buyerLang.split('-')[0];
+ let S=window.SpeechRecognition||window.webkitSpeechRecognition; if(!S) return;
+ buyerRec=new S(); buyerRec.lang=buyerLang; buyerRec.continuous=true; buyerRec.interimResults=false;
+ buyerRec.onresult=async e=>{ if(isSpeaking) return; let t=e.results[e.results.length-1][0].transcript; let tr=await translateText(t,bg,'en'); let payload={type:'buyer_to_seller', original:t, translated:tr, lang:buyerLang}; if(dataConn && dataConn.open) dataConn.send(JSON.stringify(payload)); };
+ buyerRec.onerror=e=>{ if(e.error==='aborted') return; };
+ buyerRec.onend=()=>{ if(!isSpeaking) setTimeout(()=>{ try{buyerRec.start();}catch(e){} },500); };
+ buyerRec.start();
+}
+async function speakTranslatedPhrase(text){ let tg=document.getElementById('langSelect').value.split('-')[0]; let tr=await translateText(text,'en',tg); document.getElementById('sellerTranslated').innerText='📤 Buyer hears: '+tr; sendToBuyer(text,tr); }
+function quickPhrase(txt){ speakTranslatedPhrase(txt); }
+function typeTranslate(){ let txt=document.getElementById('typeBox').value; if(!txt){alert('Type English first!');return;} speakTranslatedPhrase(txt); }
+</script>
+</body>
+</html>
