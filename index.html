@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADSPUSH V13 NO ECHO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b141a;color:#fff;font-family:Arial;text-align:center}
+header{background:#00a884;padding:16px;font-size:19px;font-weight:bold}
+.box{background:#111b21;margin:10px;padding:14px;border-radius:16px}
+button{background:#00a884;border:none;color:#fff;padding:13px 18px;border-radius:25px;margin:5px;font-size:15px;font-weight:bold}
+button.big{background:#25D366;padding:16px 30px;font-size:18px}
+input,select{width:95%;padding:13px;margin:8px;border-radius:10px;border:none;font-size:16px;text-align:center}
+video{width:100%;background:#000;border-radius:12px}
+#customerFull{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999}
+#customerFull.show{display:block}
+#customerMainVideo{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+#callerBar{position:absolute;top:0;left:0;right:0;padding:12px;background:#000000d9;z-index:10}
+#callerBar h2{font-size:26px;color:#ffeb3b}
+#callerBar p{font-size:13px;color:#25D366}
+#mySmall{position:absolute;top:78px;right:10px;width:100px;height:130px;object-fit:cover;border:2px solid #fff;border-radius:10px;z-index:11}
+#tapArea{position:absolute;top:78px;left:10px;z-index:12}
+#tapBtn{background:#25D366;font-size:13px;padding:10px 14px;border-radius:20px;border:2px solid #fff}
+#debug{position:absolute;bottom:12px;left:10px;right:10px;z-index:12;font-size:13px;background:#000000cc;padding:10px;border-radius:10px}
+#buyerBigBox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:1000}
+#buyerBigBox.show{display:block}
+#buyerBigVideo{width:100%;height:85%;object-fit:cover}
+.phrase{background:#ff9800;color:#000;width:46%;padding:15px 8px;font-size:15px;margin:4px;border-radius:15px}
+.phrase2{background:#2196F3;color:#fff;width:46%;padding:15px 8px;font-size:15px;margin:4px;border-radius:15px}
+#modeBox{padding:12px;border-radius:12px;margin:8px;font-weight:bold;font-size:16px}
+</style>
+</head>
+<body>
+<header>🚀 ADSPUSH V13 ✅ NO ECHO - VIDEO OK</header>
+<div id="buyerBigBox"><h2 style="padding:15px;color:#ffeb3b">👀 BUYER FACE</h2><video id="buyerBigVideo" autoplay playsinline></video><button class="big" onclick="closeBuyerBig()">⬅️ BACK</button></div>
+<div id="customerFull">
+  <div id="callerBar"><h2 id="callerNameDisplay">Joe is calling you!</h2><p id="callerIdShow">Trying...</p></div>
+  <video id="customerMainVideo" autoplay playsinline></video>
+  <video id="mySmall" autoplay muted playsinline></video>
+  <div id="tapArea"><button id="tapBtn" onclick="customerJoin()">🔊 TAP TO JOIN</button></div>
+  <div id="debug">Waiting...</div>
+</div>
+<div id="sellerSection">
+<div class="box" style="border:2px solid #00a884"><h3>👤 SELLER</h3><input id="myNameInput" value="Joe"><p id="myIdText">⏳ Loading...</p><p id="peerStatus" style="color:#ff3b30">Peer: Not ready</p><button onclick="retryPeer()" style="background:#ff9800;color:#000">🔄 RETRY</button></div>
+<div class="box"><h3>1. UPLOAD AD</h3><input type="file" id="adUpload" accept="image/*,video/*"><img id="myAdPhoto" style="width:100%;display:none"><video id="myAdVideo" loop muted playsinline style="width:100%;display:none"></video><p id="adStatus" style="color:#ffeb3b">No AD yet</p><button onclick="testAd()">▶️ TEST MY AD</button><p id="testResult"></p><button onclick="setMode('ad')">🎬 AD AS FACE ✅</button><button onclick="setMode('face')">📷 REAL FACE</button><p id="modeText">Mode: AD AS FACE</p></div>
+<div class="box"><h3>👀 BUYER FACE - V12 WORKING</h3><p id="buyerStatus" style="color:#ff3b30">No buyer yet</p><button class="big" onclick="showBuyerBig()">👀 SEE BUYER FACE BIG</button></div>
+<div class="box">
+<h3>2. TRANSLATION - V13 NO ECHO</h3>
+<div id="modeBox" style="background:#ff3b30">🔴 NORMAL MODE - Your voice ON - Buyer hears your English</div>
+<button id="transModeBtn" onclick="toggleTransMode()" style="background:#ff9800;color:#000;padding:16px 25px;font-size:17px">🔊 SWITCH TO TRANSLATION MODE - Mute my voice, Only French/Hausa</button>
+<p style="font-size:13px;color:#ffeb3b">👆 CLICK THIS FIRST BEFORE TRANSLATION! This kills echo!</p>
+<select id="langSelect">
+<option value="ha-NG">🇳🇬 HAUSA</option>
+<option value="yo-NG">🇳🇬 YORUBA</option>
+<option value="ig-NG">🇳🇬 IGBO</option>
+<option value="fr-FR">🇫🇷 French</option>
+<option value="es-ES">🇪🇸 Spanish</option>
+<option value="ar-EG">🇪🇬 Egypt</option>
+<option value="ar-SA">🇸🇦 Saudi</option>
+<option value="ar-KW">🇰🇼 Kuwait</option>
+<option value="ar-AE">🇦🇪 UAE</option>
+<option value="da-DK">🇩🇰 DENMARK</option>
+<option value="he-IL">🇮🇱 ISRAEL</option>
+<option value="it-IT">🇮🇹 Italian</option>
+<option value="ja-JP">🇯🇵 Japan</option>
+<option value="ko-KR">🇰🇷 Korea</option>
+<option value="zh-CN">🇨🇳 Chinese</option>
+<option value="hi-IN">🇮🇳 Hindi</option>
+<option value="pt-BR">🇧🇷 Brazil</option>
+</select><br>
+<p id="transDebug" style="color:#ffeb3b">Ready - Switch to Translation Mode first!</p>
+<p id="translated" style="background:#000;padding:12px;border-radius:10px">Translated: ---</p>
+<p style="font-size:14px">1 CLICK - Buyer hears ONLY translation - Clean!</p>
+<button class="phrase" onclick="quickPhrase('Hello how are you?')">👋 Hello how are you?</button>
+<button class="phrase" onclick="quickPhrase('This is very good product')">⭐ Very good product</button>
+<button class="phrase" onclick="quickPhrase('How much do you want to buy?')">💰 How much?</button>
+<button class="phrase" onclick="quickPhrase('The price is cheap')">💸 Price cheap</button>
+<button class="phrase" onclick="quickPhrase('What is your name?')">❓ Your name?</button>
+<button class="phrase" onclick="quickPhrase('Where are you from?')">📍 Where from?</button>
+<button class="phrase2" onclick="quickPhrase('Do you want to buy now?')">🛒 Buy now?</button>
+<button class="phrase2" onclick="quickPhrase('I will send it to you today')">📦 Send today</button>
+<button class="phrase2" onclick="quickPhrase('Thank you very much')">🙏 Thank you</button>
+<button class="phrase2" onclick="quickPhrase('Yes it is available')">✅ Yes available</button>
+<button class="phrase2" onclick="quickPhrase('No problem')">👍 No problem</button>
+<button class="phrase2" onclick="quickPhrase('Please send your address')">🏠 Send address</button>
+<p style="font-size:13px;margin-top:10px">Custom:</p>
+<input id="typeBox" placeholder="Type English if needed"><button onclick="typeTranslate()">🔊 SPEAK TYPED</button>
+<p style="font-size:13px;color:#fff">⚠️ TEST TIP: Put 2 phones FAR apart! One inside house, one outside! Use EARPHONE on seller!</p>
+</div>
+<div class="box"><h3>3. CREATE LINK</h3><button class="big" onclick="createLink()">🔗 CREATE LINK</button><button onclick="copyLink()">📋 COPY & SHARE</button><p id="linkShow" style="word-break:break-all;font-size:13px;color:#ffeb3b;background:#000;padding:8px"></p></div>
+</div>
+<div class="box"><p>Preview: AD | Buyer</p><video id="myVideo" autoplay muted playsinline style="max-height:200px"></video><video id="remoteVideo" autoplay playsinline style="max-height:220px;border:3px solid #ffeb3b"></video></div>
+<audio id="ttsAudio" crossorigin="anonymous"></audio>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer, myId, callerId=null, currentMode='ad', myLink='', micStream=null, micTrack=null, transMode=false, audioCtx=null, mixDest=null, micGain=null;
+let params=new URLSearchParams(location.search);
+let isCustomer=params.has('call');
+if(isCustomer){
+ document.getElementById('customerFull').classList.add('show');
+ let n=params.get('name')?decodeURIComponent(params.get('name')):'Joe';
+ document.getElementById('callerNameDisplay').innerText=n+' is calling you!';
+ callerId=params.get('call'); document.getElementById('callerIdShow').innerText='Seller: '+callerId;
+}
+function getFixedId(){ let name=document.getElementById('myNameInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'')||'joe'; return 'adspush-'+name+'-2026'; }
+function initPeer(){
+ if(typeof Peer==='undefined'){document.getElementById('myIdText').innerText='❌ Peer blocked';return;}
+ let idToUse = isCustomer ? undefined : getFixedId();
+ peer=new Peer(idToUse, {config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'}]}});
+ peer.on('open',id=>{myId=id; document.getElementById('myIdText').innerText='✅ READY! ID: '+id; document.getElementById('peerStatus').innerText='✅ Peer READY'; document.getElementById('peerStatus').style.color='#25D366'; if(isCustomer){document.getElementById('debug').innerText='✅ Ready - Auto joining...'; setTimeout(customerJoin,800);}});
+ peer.on('error',e=>{ if(isCustomer) document.getElementById('debug').innerText='⚠️ '+e.type+' - Retrying...'; if(e.type==='peer-unavailable') setTimeout(customerJoin,3000); });
+ peer.on('call',call=>{ getSellerStream().then(s=>{document.getElementById('myVideo').srcObject=s; call.answer(s); call.on('stream',rs=>{document.getElementById('remoteVideo').srcObject=rs; document.getElementById('remoteVideo').play().catch(()=>{}); document.getElementById('buyerBigVideo').srcObject=rs; document.getElementById('buyerStatus').innerText='✅ BUYER JOINED!'; document.getElementById('buyerStatus').style.color='#25D366';});});});
+}
+function retryPeer(){initPeer();} initPeer();
+function showBuyerBig(){ let rv=document.getElementById('remoteVideo'); if(!rv.srcObject){alert('No buyer yet!');return;} document.getElementById('buyerBigBox').classList.add('show');}
+function closeBuyerBig(){ document.getElementById('buyerBigBox').classList.remove('show');}
+function testAd(){let v=document.getElementById('myAdVideo');let p=document.getElementById('myAdPhoto');if(v.style.display!=='none'){v.muted=false;v.play();document.getElementById('testResult').innerText='✅ AD Playing!';}else if(p.style.display!=='none'){document.getElementById('testResult').innerText='✅ AD Photo!';}else document.getElementById('testResult').innerText='❌ No AD!';}
+async function createMixedAudio(){
+ try{
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)(); mixDest = audioCtx.createMediaStreamDestination();
+  let rawMic = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
+  micStream=rawMic; micTrack=rawMic.getAudioTracks()[0];
+  let micSource=audioCtx.createMediaStreamSource(rawMic); micGain=audioCtx.createGain(); micGain.gain.value=1; micSource.connect(micGain); micGain.connect(mixDest);
+  let ttsAudio=document.getElementById('ttsAudio'); try{ let ttsSource=audioCtx.createMediaElementSource(ttsAudio); let ttsGain=audioCtx.createGain(); ttsGain.gain.value=2.0; ttsSource.connect(ttsGain); ttsGain.connect(mixDest); }catch(e){}
+  return mixDest.stream.getAudioTracks()[0];
+ }catch(e){ let s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true}}); micStream=s; micTrack=s.getAudioTracks()[0]; return micTrack; }
+}
+async function getSellerStream(){
+ let audioTrack = await createMixedAudio();
+ if(currentMode==='ad'){
+  let v=document.getElementById('myAdVideo'); let p=document.getElementById('myAdPhoto');
+  if(v.src && v.style.display!=='none'){ v.muted=true; await v.play().catch(()=>{}); let vs=v.captureStream?v.captureStream():v.mozCaptureStream(); let tracks=[...vs.getVideoTracks(), audioTrack]; return new MediaStream(tracks); }
+  if(p.src && p.style.display!=='none'){ let c=document.createElement('canvas'); c.width=640;c.height=360; let ctx=c.getContext('2d'); setInterval(()=>ctx.drawImage(p,0,0,640,360),100); let vs=c.captureStream(30); let tracks=[...vs.getVideoTracks(), audioTrack]; return new MediaStream(tracks); }
+ }
+ let s=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); s.addTrack(audioTrack); return s;
+}
+function setMode(m){currentMode=m;document.getElementById('modeText').innerText=m==='ad'?'Mode: AD AS FACE ✅':'Mode: Real Face';}
+async function customerJoin(){
+ document.getElementById('debug').innerText='Joining...';
+ try{
+  let s=null; try{ s=await navigator.mediaDevices.getUserMedia({video:true,audio:{echoCancellation:true}}); document.getElementById('mySmall').srcObject=s; document.getElementById('mySmall').play().catch(()=>{}); }catch(e){ s=new MediaStream(); }
+  let c=peer.call(callerId, s||new MediaStream());
+  c.on('stream', rs=>{ let mv=document.getElementById('customerMainVideo'); mv.srcObject=rs; mv.play().then(()=>{document.getElementById('debug').innerText='✅ CONNECTED!'; document.getElementById('tapArea').style.display='none';}); });
+ }catch(e){ document.getElementById('debug').innerText='❌ '+e.message; setTimeout(customerJoin,3000); }
+}
+function createLink(){ if(!myId){alert('Wait READY');return;} let n=document.getElementById('myNameInput').value||'Joe'; myLink=location.href.split('?')[0]+'?call='+myId+'&name='+encodeURIComponent(n); document.getElementById('linkShow').innerText=myLink; alert('Link created!');}
+function copyLink(){ if(!myLink) createLink(); navigator.clipboard.writeText('Hi! This is '+document.getElementById('myNameInput').value+' 👋 Click to see live 👇\n'+myLink); alert('Copied!');}
+document.getElementById('adUpload').addEventListener('change',e=>{let f=e.target.files[0];let u=URL.createObjectURL(f);if(f.type.startsWith('image')){let i=document.getElementById('myAdPhoto');i.src=u;i.style.display='block';document.getElementById('myAdVideo').style.display='none';document.getElementById('adStatus').innerText='Photo AD ready ✅';}else{let v=document.getElementById('myAdVideo');v.src=u;v.style.display='block';v.play();document.getElementById('myAdPhoto').style.display='none';document.getElementById('adStatus').innerText='Video AD ready ✅';}});
+
+function toggleTransMode(){
+ transMode=!transMode;
+ if(transMode){
+   // HARD MUTE mic
+   if(micTrack) micTrack.enabled=false;
+   if(micGain) micGain.gain.value=0;
+   document.getElementById('modeBox').innerText='🟢 TRANSLATION MODE - Your voice OFF - Buyer hears ONLY clean French/Hausa - NO ECHO!';
+   document.getElementById('modeBox').style.background='#25D366'; document.getElementById('modeBox').style.color='#000';
+   document.getElementById('transModeBtn').innerText='🔴 SWITCH TO NORMAL MODE - My voice ON';
+   document.getElementById('transDebug').innerText='✅ Translation Mode ON - Mic muted - Now click phrase!';
+ } else {
+   if(micTrack) micTrack.enabled=true;
+   if(micGain) micGain.gain.value=1;
+   document.getElementById('modeBox').innerText='🔴 NORMAL MODE - Your voice ON - Buyer hears your English';
+   document.getElementById('modeBox').style.background='#ff3b30'; document.getElementById('modeBox').style.color='#fff';
+   document.getElementById('transModeBtn').innerText='🔊 SWITCH TO TRANSLATION MODE - Mute my voice, Only French/Hausa';
+   document.getElementById('transDebug').innerText='Normal mode - Your voice ON';
+ }
+}
+function muteMicHard(){ if(micTrack) micTrack.enabled=false; if(micGain) micGain.gain.value=0; }
+function unmuteMicIfNormal(){ if(!transMode){ if(micTrack) micTrack.enabled=true; if(micGain) micGain.gain.value=1; } }
+async function speakTranslated(text){
+ let lang=document.getElementById('langSelect').value; let tg=lang.split('-')[0];
+ // ALWAYS mute mic before translation - No echo
+ muteMicHard();
+ if(tg==='en'){ document.getElementById('translated').innerText='English: '+text; speakDirect(text,'en'); return; }
+ document.getElementById('transDebug').innerText='⏳ Translating '+text+' to '+lang+'...';
+ try{
+  // Try MyMemory, fallback to direct if fails
+  let r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${tg}`);
+  let d=await r.json(); let tr=d.responseData.translatedText;
+  if(!tr || tr.toLowerCase().includes('query') || tr===text){ throw new Error('bad translate'); }
+  document.getElementById('translated').innerText='Translated ('+lang+'): '+tr;
+  document.getElementById('transDebug').innerText='✅ Clean translation - Sending DIRECT to buyer - No echo!';
+  speakDirect(tr,tg);
+ }catch(e){
+  document.getElementById('transDebug').innerText='⚠️ MyMemory slow - Trying Google TTS direct...';
+  // Fallback: Speak original text with target lang voice - Still sounds French accent
+  speakDirect(text,tg);
+  document.getElementById('translated').innerText='Fallback: '+text+' in '+tg+' voice';
+ }
+}
+function speakDirect(text, tg){
+ let audio=document.getElementById('ttsAudio');
+ audio.src='https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl='+tg+'&client=tw-ob';
+ audio.play().then(()=>{ document.getElementById('transDebug').innerText='🔊 Playing CLEAN translation to buyer - Your mic is OFF!'; }).catch(()=>{
+   let u=new SpeechSynthesisUtterance(text); u.lang=tg; u.volume=1; speechSynthesis.speak(u);
+   u.onend=()=>{ unmuteMicIfNormal(); };
+ });
+ audio.onended=()=>{ setTimeout(()=>{ unmuteMicIfNormal(); document.getElementById('transDebug').innerText='✅ Done - Mic back: '+(transMode?'Translation mode - Still muted':'Normal - ON'); },500); };
+ setTimeout(()=>{ unmuteMicIfNormal(); },5000);
+}
+function typeTranslate(){ let txt=document.getElementById('typeBox').value; if(!txt){alert('Type first');return;} speakTranslated(txt); }
+function quickPhrase(txt){ speakTranslated(txt); }
+</script>
+</body>
+  </html>
